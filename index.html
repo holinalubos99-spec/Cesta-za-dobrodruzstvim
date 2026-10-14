@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#120710" />
+  <title>Cesta našeho příběhu ❤️</title>
+
+  <script>
+    // ============================================================================
+    // NASTAVENÍ ROMANTICKÉ HRY – ZDE UPRAVUJ TEXTY, SOUŘADNICE A ODKAZY
+    // ============================================================================
+    // DŮLEŽITÉ PRAVIDLO:
+    // Všechny texty piš mezi uvozovky "takto". Uvozovky ani čárky na konci řádků nemaž.
+    // Desetinná čísla u GPS souřadnic piš s TEČKOU (např. 50.0865), nikoliv s čárkou!
+    // ============================================================================
+
+    const NASTAVENI_HRY = {
+
+      // --- 1. ZÁKLADNÍ ÚDAJE O VÁS ---
+      jmenoPartnerky: "Lásko",               // Jak hru osloví (např. "Terezko", "Lásko", "Princezno")
+      jmenoPartnera: "Luboš",                // Tvoje jméno (zobrazí se v podpisu na konci)
+      nazevHry: "Cesta našeho příběhu",      // Hlavní nadpis na úvodní obrazovce
+      podnadpisHry: "Malé dobrodružství po místech, která pro nás znamenají svět...",
+
+      // --- 2. ÚVODNÍ OBRAZOVKA ---
+      uvodniText: "Připravil jsem pro tebe malé tajemství. Čeká tě několik zastávek, které nás spojují. Na každém místě se ti odemkne další střípek našeho příběhu. Obuj si pohodlné boty, vezmi si telefon a nech se vést svým srdcem...",
+      tlacitkoStart: "Vyrazit za dobrodružstvím ✨",
+
+      // --- 3. GLOBÁLNÍ NASTAVENÍ GPS A ZÁLOŽNÍHO KÓDU ---
+      vychoziToleranceMetru: 80,             // Jak blízko (v metrech) musí partnerka přijít, aby se stanoviště odemklo (doporučeno 60 až 100 m)
+      univerzalniZálozniKod: "LASKA",        // Nouzový kód (velkými/malými písmeny nezáleží), kterým lze odemknout jakékoliv stanoviště, kdyby zlobila GPS
+      povolitRucniOdemceniBezKodu: true,     // Pokud je true, nabídne při chybě GPS i tlačítko "Jsem na místě (potvrdit ručně)"
+
+      // --- 4. JEDNOTLIVÁ STANOVIŠTĚ (ZASTÁVKY) ---
+      // Jak zjistíš GPS souřadnice? Otevři Mapy Google nebo Mapy.cz, podrž prst na místě a zkopíruj dvě čísla (např. 50.08647, 14.41143).
+      stanoviste: [
+        {
+          id: 1,
+          nazev: "1. Kde to všechno začalo",
+          kratkyPopis: "První zastávka našeho příběhu",
+          // UKÁZKOVÉ SOUŘADNICE (Praha - Kampa) -> PŘEPIŠ NA SVÉ SKUTEČNÉ MÍSTO:
+          lat: 50.08647,
+          lng: 14.41143,
+          toleranceMetru: 80,
+          zalozniKod: "PRVNI",
+
+          // Text, který uvidí ještě PŘED příchodem na místo (navigace):
+          kudyKam: "Vydej se na místo, kde jsme spolu strávili naše úplně první chvíle. Až budeš na místě, klikni na tlačítko pro ověření polohy.",
+
+          // Obsah, který se ODEMKNE až po příchodu na místo:
+          romantickyText: "[UKÁZKOVÝ TEXT – ZDE DOPLŇ VLASTNÍ VZPOMÍNKU] Pamatuji si ten den, jako by to bylo včera. Když jsem tě tu poprvé uviděl, věděl jsem, že se můj život právě změnil k lepšímu. Tvůj úsměv mi tehdy vyrazil dech – a dělá to dodnes.",
+          
+          // Fotografie (nepovinné – vlož odkaz nebo název souboru, např. "fotka1.jpg", případně nech prázdné ""):
+          fotka: "",
+          popisekFotky: "Naše první společná chvíle ❤️",
+
+          // Úkol nebo hádanka na místě:
+          ukol: "Rozhlédni se kolem sebe, zhluboka se nadechni a vzpomeň si, o čem jsme si tu tehdy povídali. Potom mi pošli jedno srdíčko do zprávy (nebo se na mě usměj, jestli jdu s tebou).",
+          vyzadanaOdpoved: "", 
+          napovedaKOdpovedi: "",
+
+          // Informace, kam pokračovat po splnění:
+          kamDal: "Skvělá práce! Naše další zastávka vede tam, kde si vždycky nejraději vychutnáme něco dobrého..."
+        },
+
+        {
+          id: 2,
+          nazev: "2. Naše oblíbené útočiště",
+          kratkyPopis: "Místo plné smíchu a pohody",
+          // UKÁZKOVÉ SOUŘADNICE (Praha - Petřínské sady) -> PŘEPIŠ NA SVÉ SKUTEČNÉ MÍSTO:
+          lat: 50.08350,
+          lng: 14.39620,
+          toleranceMetru: 80,
+          zalozniKod: "KAVA",
+
+          kudyKam: "Pokračuj na místo, kam spolu nejraději utíkáme před celým světem na dobrou kávu nebo procházku.",
+
+          romantickyText: "[UKÁZKOVÝ TEXT – ZDE DOPLŇ VLASTNÍ VZPOMÍNKU] S tebou i úplně obyčejný den chutná jako svátek. Miluji to, jak se spolu dokážeme smát úplným maličkostem a jak vedle tebe cítím naprostý klid a domov.",
+          
+          fotka: "",
+          popisekFotky: "Chvíle, které bych neměnil za nic na světě ✨",
+
+          ukol: "Malá hádanka pro tebe: Najdi poblíž lavičku nebo klidné místo, na chvilku se zastav a přečti si tento vzkaz ještě jednou. Pak potvrď splnění úkolu.",
+          vyzadanaOdpoved: "",
+          napovedaKOdpovedi: "",
+
+          kamDal: "Už jsi skoro u cíle! Teď se vydej k poslednímu, nejkrásnějšímu místu dnešní cesty..."
+        },
+
+        {
+          id: 3,
+          nazev: "3. Vyhlídka do naší budoucnosti",
+          kratkyPopis: "Poslední zastávka před velkým tajemstvím",
+          // UKÁZKOVÉ SOUŘADNICE (Praha - Vyhlídka) -> PŘEPIŠ NA SVÉ SKUTEČNÉ MÍSTO:
+          lat: 50.08260,
+          lng: 14.39280,
+          toleranceMetru: 90,
+          zalozniKod: "NAVZDY",
+
+          kudyKam: "Dojdi až na místo s výhledem, kde na tebe čeká poslední zastávka dnešní hry.",
+
+          romantickyText: "[UKÁZKOVÝ TEXT – ZDE DOPLŇ VLASTNÍ VZPOMÍNKU] Ušli jsme spolu už kus krásné cesty. Každý krok vedle tebe mě utvrdil v tom, že jsi ten nejúžasnější člověk, jakého jsem kdy potkal. Všechna místa z naší minulosti nás dovedla až sem – do přítomného okamžiku.",
+          
+          fotka: "",
+          popisekFotky: "Společně na konci i na novém začátku 💫",
+
+          ukol: "Zastav se na dohodnutém místě. Až budeš připravená odhalit poslední tajemství dnešního dne, potvrď tento poslední úkol.",
+          vyzadanaOdpoved: "",
+          napovedaKOdpovedi: "",
+
+          kamDal: "Všechna stanoviště jsou splněna! Nyní se ti odemkla závěrečná kapitola..."
+        }
+      ],
+
+      // --- 5. FINÁLNÍ ŽÁDOST O RUKU A HUDBA (KABÁT – MALÁ DÁMA) ---
+      finale: {
+        nadpisKapitoly: "Poslední tajemství",
+        krokyOdhaleni: [
+          {
+            nadpis: "Děkuji ti za každý den...",
+            text: "Když se ohlédnu zpátky na všechno, co jsme spolu prožili, cítím obrovskou vděčnost. Jsi moje opora, moje nejlepší kamarádka, moje radost i moje největší láska.",
+            tlacitko: "Pokračovat ❤️"
+          },
+          {
+            nadpis: "Jsi moje Malá dáma...",
+            text: "Existuje jedna píseň, která pro nás má zvláštní kouzlo. Než přejdeme k poslednímu kroku, pojďme si pustit tóny, které k této chvíli patří...",
+            tlacitko: "Pokračovat k velkému finále ✨",
+            zobrazitHudbuZde: true
+          }
+        ],
+
+        hlavniNadpis: "Mám na tebe už jen jednu otázku...",
+        osobniPoselstvi: "Nechci s tebou chodit jen po vzpomínkách z minulosti. Chci s tebou tvořit všechny další zastávky po zbytek našeho života. Podívej se teď prosím na mě...",
+        velkaOtazka: "Vezmeš si mě?",
+        tlacitkoAno: "ANO, vezmu! 💍❤️",
+        zpravaPoAno: "Udělala jsi mě nejšťastnějším mužem na světě! Miluji tě navždy. ❤️",
+
+        // --- NASTAVENÍ SKLADBY: KABÁT – MALÁ DÁMA ---
+        nazevPisen: "Kabát – Malá dáma",
+        popisPisen: "Klepni na tlačítko níže pro spuštění naší písně (otevře se v oficiálním přehrávači):",
+        hlavniOdkazNaPisen: "https://www.youtube.com/results?search_query=Kabat+Mala+dama+official",
+        spotifyOdkaz: "https://open.spotify.com/search/Kab%C3%A1t%20Mal%C3%A1%20d%C3%A1ma",
+        youtubeVideoId: ""
+      }
+    };
+  </script>
+
+  <!-- Romantické české písmo z Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #120710;
+      --bg-mid: #240e20;
+      --bg-card: rgba(38, 17, 34, 0.82);
+      --bg-card-locked: rgba(25, 12, 23, 0.65);
+      --bg-card-done: rgba(16, 42, 33, 0.78);
+      --border-subtle: rgba(243, 198, 143, 0.22);
+      --border-gold: rgba(243, 198, 143, 0.65);
+      --border-green: rgba(52, 211, 153, 0.55);
+      --gold-light: #fbe5c8;
+      --gold-main: #f3c68f;
+      --rose-main: #e87a96;
+      --rose-deep: #be3b61;
+      --green-main: #34d399;
+      --green-dark: #059669;
+      --text-main: #fdf8f5;
+      --text-muted: #d6c3c9;
+      --text-dim: #9e858f;
+      --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.55);
+      --shadow-glow: 0 0 25px rgba(232, 122, 150, 0.28);
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-deep);
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(190, 59, 97, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(243, 198, 143, 0.14) 0%, transparent 50%),
+        linear-gradient(165deg, #120710 0%, #240e20 50%, #150913 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    #ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.65;
+    }
+
+    .test-banner {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #b45309, #d97706);
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .test-banner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .test-banner-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn-test-mini {
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .app-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 48px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 4px 16px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: 0.03em;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border-subtle);
+      color: var(--gold-light);
+      border-radius: 50px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn.active {
+      background: rgba(232, 122, 150, 0.25);
+      border-color: var(--rose-main);
+    }
+
+    .progress-box {
+      background: rgba(25, 11, 22, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rose-main), var(--gold-main), var(--green-main));
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .screen {
+      display: none;
+      animation: fadeSlideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 26px 22px;
+      box-shadow: var(--shadow-soft), var(--shadow-glow);
+      backdrop-filter: blur(14px);
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold-main), var(--rose-main), transparent);
+      opacity: 0.8;
+    }
+
+    .hero-ornament {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 12px rgba(232, 122, 150, 0.5));
+      animation: gentlePulse 3s infinite ease-in-out;
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .serif-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--gold-light);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--rose-main);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+      margin: 18px 0;
+    }
+
+    .romantic-paragraph {
+      color: var(--text-main);
+      font-size: 1.02rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      white-space: pre-line;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 14px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      text-align: center;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose-deep) 0%, var(--rose-main) 55%, #f0977b 100%);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(190, 59, 97, 0.45);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #b88644 0%, var(--gold-main) 50%, #fbe5c8 100%);
+      color: #1f0c19;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(243, 198, 143, 0.35);
+    }
+
+    .btn-green {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+      color: #06281e;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.35);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--gold-light);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-small {
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      border-radius: 11px;
+    }
+
+    .checkpoints-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .checkpoint-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .checkpoint-item.status-done {
+      background: var(--bg-card-done);
+      border-color: var(--border-green);
+    }
+
+    .checkpoint-item.status-current {
+      border-color: var(--border-gold);
+      box-shadow: 0 0 20px rgba(243, 198, 143, 0.2);
+    }
+
+    .checkpoint-item.status-locked {
+      background: var(--bg-card-locked);
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .cp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    .status-done .cp-icon {
+      background: rgba(52, 211, 153, 0.2);
+      color: var(--green-main);
+      border: 1px solid var(--green-main);
+    }
+
+    .status-current .cp-icon {
+      background: rgba(243, 198, 143, 0.2);
+      color: var(--gold-light);
+      border: 1px solid var(--gold-main);
+    }
+
+    .status-locked .cp-icon {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-dim);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cp-info { flex: 1; }
+
+    .cp-title {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 2px;
+    }
+
+    .status-done .cp-title { color: #a7f3d0; }
+    .cp-desc { font-size: 0.84rem; color: var(--text-muted); }
+
+    .cp-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .badge-done { background: rgba(52, 211, 153, 0.2); color: var(--green-main); }
+    .badge-current { background: rgba(243, 198, 143, 0.22); color: var(--gold-light); }
+    .badge-locked { background: rgba(255, 255, 255, 0.08); color: var(--text-dim); }
+
+    .status-banner {
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-banner.locked {
+      background: rgba(243, 198, 143, 0.12);
+      border: 1px solid rgba(243, 198, 143, 0.35);
+      color: var(--gold-light);
+    }
+
+    .status-banner.unlocked {
+      background: rgba(232, 122, 150, 0.16);
+      border: 1px solid rgba(232, 122, 150, 0.45);
+      color: #ffd6e0;
+    }
+
+    .status-banner.completed {
+      background: rgba(52, 211, 153, 0.16);
+      border: 1px solid var(--border-green);
+      color: #a7f3d0;
+    }
+
+    .gps-box {
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .gps-feedback {
+      font-size: 0.9rem;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .gps-feedback.visible { display: block; }
+
+    .map-links-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .fallback-section {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+
+    .fallback-toggle {
+      background: none;
+      border: none;
+      color: var(--gold-main);
+      font-size: 0.86rem;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .fallback-form {
+      display: none;
+      margin-top: 10px;
+      gap: 8px;
+      flex-direction: column;
+    }
+
+    .fallback-form.open { display: flex; }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: var(--font-sans);
+    }
+
+    .memory-photo-box {
+      margin: 18px 0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-gold);
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .memory-photo-box img {
+      width: 100%;
+      max-height: 340px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .memory-caption {
+      padding: 10px 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      text-align: center;
+      color: var(--gold-light);
+    }
+
+    .task-box {
+      background: rgba(232, 122, 150, 0.1);
+      border: 1px solid rgba(232, 122, 150, 0.35);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 18px 0;
+    }
+
+    .task-box-title {
+      font-weight: 700;
+      color: var(--gold-light);
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .next-direction-box {
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid var(--border-green);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      color: #d1fae5;
+    }
+
+    .chapter-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      background: radial-gradient(circle at center, #2e1128 0%, #10050e 100%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .chapter-overlay.visible { display: flex; }
+
+    .proposal-card {
+      border-color: var(--gold-main);
+      background: linear-gradient(165deg, rgba(48, 17, 40, 0.94) 0%, rgba(25, 9, 22, 0.96) 100%);
+      box-shadow: 0 0 40px rgba(243, 198, 143, 0.25), 0 16px 40px rgba(0, 0, 0, 0.65);
+    }
+
+    .big-question {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      text-align: center;
+      margin: 22px 0;
+      text-shadow: 0 0 18px rgba(243, 198, 143, 0.45);
+    }
+
+    .music-box {
+      background: rgba(243, 198, 143, 0.1);
+      border: 1px solid var(--border-gold);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    .music-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .video-embed-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-top: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .video-embed-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .app-footer {
+      margin-top: auto;
+      padding-top: 28px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .footer-link {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      text-decoration: underline;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin: 0 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- Horní lišta TESTOVACÍHO REŽIMU -->
+  <div id="test-banner" class="test-banner" style="display: none;">
+    <div class="test-banner-header">
+      <span>🧪 TESTOVACÍ REŽIM (odlišný od ostré hry)</span>
+      <button id="test-btn-exit" class="btn-test-mini">✕ Ukončit test</button>
+    </div>
+    <div class="test-banner-actions">
+      <button id="test-btn-sim-gps" class="btn-test-mini">📍 Simulovat příchod na GPS</button>
+      <button id="test-btn-unlock-all" class="btn-test-mini">🔓 Odemknout a splnit vše</button>
+      <button id="test-btn-reset" class="btn-test-mini">🔄 Vynulovat test</button>
+    </div>
+  </div>
+
+  <!-- Slavnostní překryvná obrazovka při odemknutí kapitoly -->
+  <div id="chapter-overlay" class="chapter-overlay">
+    <div class="hero-ornament">✨💖✨</div>
+    <p class="subtitle" style="margin-bottom: 6px;">Místo bylo úspěšně odemčeno</p>
+    <h2 id="overlay-title" class="serif-title" style="font-size: 2.2rem; margin-bottom: 12px;">Kapitola</h2>
+    <p id="overlay-subtitle" class="romantic-paragraph" style="text-align: center; color: var(--gold-light); max-width: 340px;"></p>
+    <div style="width: 100%; max-width: 280px; margin-top: 18px;">
+      <button id="btn-overlay-continue" class="btn btn-gold">Otevřít vzpomínku ❤️</button>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+
+    <header class="top-bar">
+      <div id="btn-nav-home" class="brand-badge" style="cursor: pointer;">
+        <span>✨</span> <span>Náš příběh</span>
+      </div>
+      <div class="top-actions">
+        <button id="btn-sound-toggle" class="icon-btn" type="button">🔇 Zvuk vypnut</button>
+      </div>
+    </header>
+
+    <div id="progress-box" class="progress-box" style="display: none;">
+      <div class="progress-header">
+        <span id="progress-text">Splněno 0 z 3 zastávek</span>
+        <strong id="progress-percent">0 %</strong>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- OBRAZOVKA 1: ÚVODNÍ PŘIVÍTÁNÍ -->
+    <section id="screen-welcome" class="screen active">
+      <div class="glass-card" style="text-align: center; padding: 34px 24px;">
+        <div class="hero-ornament">💌</div>
+        <p id="welcome-greeting" class="subtitle" style="font-size: 1.05rem; margin-bottom: 6px;">Ahoj, Lásko ❤️</p>
+        <h1 id="welcome-title" class="serif-title" style="font-size: 2.3rem;">Cesta našeho příběhu</h1>
+        <p id="welcome-subtitle" class="subtitle"></p>
+        <div class="divider"></div>
+        <p id="welcome-text" class="romantic-paragraph" style="text-align: center;"></p>
+        <div style="margin-top: 24px;">
+          <button id="btn-start-game" class="btn btn-primary">Vyrazit za dobrodružstvím ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBRAZOVKA 2: PŘEHLED STANOVIŠŤ -->
+    <section id="screen-map" class="screen">
+      <div class="glass-card" style="padding: 20px;">
+        <h2 class="serif-title" style="font-size: 1.75rem;">Zastávky naší cesty</h2>
+        <p class="subtitle" style="margin-bottom: 14px;">Klepni na aktuální zastávku pro zobrazení navigace a úkolu</p>
+
+        <div id="checkpoints-list" class="checkpoints-list"></div>
+
+        <div id="finale-unlock-box" style="display: none; margin-top: 18px; text-align: center;">
+          <div class="divider"></div>
+          <div class="hero-ornament" style="font-size: 2rem;">✨💍✨</div>
+          <h3 class="serif-title" style="font-size: 1.6rem; margin-bottom: 8px;">Všechny zastávky jsou splněny!</h3>
+          <p class="romantic-paragraph" style="font-size: 0.95rem; text-align: center;">
+            Došla jsi až na samotný konec naší dnešní trasy. Teď na tebe čeká poslední a nejdůležitější kapitola...
+          </p>
+          <button id="btn-open-finale" class="btn btn-gold">✨ Otevřít poslední tajemství ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBRAZOVKA 3: DETAIL STANOVIŠTĚ -->
+    <section id="screen-checkpoint" class="screen">
+      <div style="margin-bottom: 12px;">
+        <button id="btn-back-to-map" class="btn btn-outline btn-small" style="width: auto;">
+          ← Zpět na přehled zastávek
+        </button>
+      </div>
+
+      <div class="glass-card">
+        <h2 id="cp-detail-title" class="serif-title" style="text-align: left; font-size: 1.85rem;">Název zastávky</h2>
+        <p id="cp-detail-subtitle" class="subtitle" style="text-align: left; margin-bottom: 14px;"></p>
+
+        <div id="cp-status-banner" class="status-banner locked"></div>
+
+        <div style="margin-bottom: 14px;">
+          <div class="task-box-title">🧭 Kudy vede cesta:</div>
+          <p id="cp-kudy-kam" class="romantic-paragraph" style="margin-bottom: 10px; font-size: 0.96rem;"></p>
+          <div class="map-links-row">
+            <a id="link-mapy-cz" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-small">
+              🗺️ Mapy.cz
+            </a>
+            <a id="link-google-maps" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-small">
+              📍 Google Mapy
+            </a>
+          </div>
+        </div>
+
+        <div id="cp-gps-section" class="gps-box">
+          <button id="btn-verify-gps" class="btn btn-gold">
+            📍 Ověřit moji polohu (GPS)
+          </button>
+          <div id="gps-feedback" class="gps-feedback"></div>
+
+          <div class="fallback-section">
+            <button id="btn-toggle-fallback" class="fallback-toggle" type="button">
+              Zlobí tady signál GPS? Odemknout záložním kódem nebo ručně
+            </button>
+            <div id="fallback-form" class="fallback-form">
+              <input id="input-backup-code" type="text" class="input-field" placeholder="Zadej záložní kód (např. LASKA)" autocomplete="off" />
+              <button id="btn-submit-code" class="btn btn-outline btn-small" type="button">
+                🔑 Odemknout kódem
+              </button>
+              <button id="btn-manual-unlock" class="btn btn-outline btn-small" type="button">
+                ✓ Jsem opravdu na místě (potvrdit ručně)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="cp-unlocked-content" style="display: none;">
+          <div class="divider"></div>
+          <div class="task-box-title" style="color: var(--rose-main); margin-bottom: 8px;">💌 Osobní vzkaz pro tebe:</div>
+          <p id="cp-romantic-text" class="romantic-paragraph"></p>
+
+          <div id="cp-photo-box" class="memory-photo-box" style="display: none;">
+            <img id="cp-photo-img" src="" alt="Společná vzpomínka" />
+            <div id="cp-photo-caption" class="memory-caption"></div>
+          </div>
+
+          <div class="task-box">
+            <div class="task-box-title">✨ Tvůj úkol na tomto místě:</div>
+            <p id="cp-task-text" class="romantic-paragraph" style="margin-bottom: 12px; font-size: 0.96rem;"></p>
+
+            <div id="cp-answer-wrap" style="display: none; margin-bottom: 12px;">
+              <input id="input-task-answer" type="text" class="input-field" placeholder="Napiš svou odpověď..." autocomplete="off" />
+              <p id="cp-answer-hint" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;"></p>
+            </div>
+
+            <button id="btn-complete-task" class="btn btn-green">
+              ✓ Úkol splněn – pokračovat dál
+            </button>
+          </div>
+
+          <div id="cp-next-box" class="next-direction-box" style="display: none;">
+            <div class="task-box-title" style="color: var(--green-main);">🌟 Skvěle! Kam pokračovat dál:</div>
+            <p id="cp-kam-dal-text" style="margin-bottom: 14px; font-size: 0.95rem;"></p>
+            <button id="btn-go-next-cp" class="btn btn-gold">
+              Přejít na další zastávku →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- OBRAZOVKA 4: FINÁLNÍ ŽÁDOST O RUKU -->
+    <section id="screen-finale" class="screen">
+      <div style="margin-bottom: 12px;">
+        <button id="btn-finale-back" class="btn btn-outline btn-small" style="width: auto;">
+          ← Zpět na přehled zastávek
+        </button>
+      </div>
+
+      <div id="finale-step-container" class="glass-card proposal-card" style="text-align: center; padding: 32px 22px;">
+        <div class="hero-ornament">✨💖✨</div>
+        <p id="finale-step-indicator" class="subtitle"></p>
+        <h2 id="finale-step-title" class="serif-title" style="font-size: 2rem; margin-bottom: 14px;"></h2>
+        <div class="divider"></div>
+        <p id="finale-step-text" class="romantic-paragraph" style="text-align: center; font-size: 1.08rem;"></p>
+        <div id="finale-step-music"></div>
+        <div style="margin-top: 24px;">
+          <button id="btn-finale-next-step" class="btn btn-gold">Pokračovat ❤️</button>
+        </div>
+      </div>
+
+      <div id="finale-main-proposal" class="glass-card proposal-card" style="display: none; text-align: center; padding: 32px 22px;">
+        <div class="hero-ornament" style="font-size: 3rem;">💍</div>
+        <h2 id="proposal-title" class="serif-title" style="font-size: 2.1rem;"></h2>
+        <div class="divider"></div>
+        <p id="proposal-message" class="romantic-paragraph" style="text-align: center; font-size: 1.08rem;"></p>
+
+        <div id="finale-main-music"></div>
+
+        <div class="big-question" id="proposal-question">Vezmeš si mě?</div>
+        <p id="proposal-signature" class="subtitle" style="font-size: 1.05rem; margin-bottom: 24px;"></p>
+
+        <button id="btn-say-yes" class="btn btn-primary" style="font-size: 1.15rem; padding: 18px;">
+          ANO, vezmu! 💍❤️
+        </button>
+
+        <div id="yes-celebration-box" class="next-direction-box" style="display: none; text-align: center; margin-top: 20px;">
+          <div style="font-size: 2.2rem; margin-bottom: 6px;">🥂💖🎉</div>
+          <h3 class="serif-title" style="color: #a7f3d0; font-size: 1.7rem; margin-bottom: 8px;">Řekla jsi ANO!</h3>
+          <p id="yes-message-text" style="font-size: 1.02rem; margin-bottom: 8px;"></p>
+          <p id="yes-time-text" style="font-size: 0.8rem; opacity: 0.85;"></p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p style="margin-bottom: 8px;">Vytvořeno s láskou ❤️</p>
+      <div>
+        <button id="btn-toggle-test" class="footer-link" type="button">
+          🧪 Zapnout testovací režim (pro vyzkoušení doma)
+        </button>
+        <span>•</span>
+        <button id="btn-reset-real" class="footer-link" type="button">
+          Vynulovat postup
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const STORAGE_KEY_REAL = "romanticka_hra_real_v1";
+      const STORAGE_KEY_TEST = "romanticka_hra_test_v1";
+
+      const urlParams = new URLSearchParams(window.location.search);
+      let isTestMode = urlParams.get("test") === "1";
+
+      function createDefaultState() {
+        return {
+          started: false,
+          unlockedIds: [],
+          completedIds: [],
+          finaleStep: 0,
+          saidYes: false,
+          saidYesTime: null,
+          soundEnabled: false
+        };
+      }
+
+      let state = createDefaultState();
+      let currentCheckpointId = null;
+
+      function getStorageKey() {
+        return isTestMode ? STORAGE_KEY_TEST : STORAGE_KEY_REAL;
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(getStorageKey());
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            state = Object.assign(createDefaultState(), parsed);
+          } else {
+            state = createDefaultState();
+          }
+        } catch (e) {
+          state = createDefaultState();
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(getStorageKey(), JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      let audioCtx = null;
+      function playGentleChime(type) {
+        if (!state.soundEnabled) return;
+        try {
+          if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return;
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx.state === "suspended") audioCtx.resume();
+
+          const now = audioCtx.currentTime;
+          const notes =
+            type === "celebration"
+              ? [523.25, 659.25, 783.99, 1046.5]
+              : type === "unlock"
+              ? [440, 554.37, 659.25]
+              : [523.25, 659.25];
+
+          notes.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.12 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.12 + 0.65);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.7);
+          });
+        } catch (e) {}
+      }
+
+      function calculateDistanceMeters(lat1, lon1, lat2, lon2) {
+        const R = 6371000;
+        const toRad = (deg) => (deg * Math.PI) / 180;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round(R * c);
+      }
+
+      function getCheckpoints() {
+        return (NASTAVENI_HRY && NASTAVENI_HRY.stanoviste) || [];
+      }
+
+      function isCheckpointCompleted(id) {
+        return state.completedIds.includes(id);
+      }
+
+      function isCheckpointUnlocked(id) {
+        return state.unlockedIds.includes(id) || isCheckpointCompleted(id);
+      }
+
+      function isCheckpointAvailable(index) {
+        if (index === 0) return true;
+        const prevCp = getCheckpoints()[index - 1];
+        return prevCp ? isCheckpointCompleted(prevCp.id) : true;
+      }
+
+      function areAllCheckpointsCompleted() {
+        const cps = getCheckpoints();
+        if (cps.length === 0) return true;
+        return cps.every((cp) => isCheckpointCompleted(cp.id));
+      }
+
+      function showScreen(screenId) {
+        document.querySelectorAll(".screen").forEach((el) => el.classList.remove("active"));
+        const target = document.getElementById(screenId);
+        if (target) {
+          target.classList.add("active");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        updateProgressBar();
+        updateTestBanner();
+      }
+
+      function updateProgressBar() {
+        const cps = getCheckpoints();
+        const total = cps.length;
+        const done = cps.filter((cp) => isCheckpointCompleted(cp.id)).length;
+        const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        const progressBox = document.getElementById("progress-box");
+        if (!state.started) {
+          progressBox.style.display = "none";
+          return;
+        }
+        progressBox.style.display = "block";
+        document.getElementById("progress-text").textContent = `Splněno ${done} z ${total} zastávek`;
+        document.getElementById("progress-percent").textContent = `${percent} %`;
+        document.getElementById("progress-fill").style.width = `${percent}%`;
+      }
+
+      function updateTestBanner() {
+        const banner = document.getElementById("test-banner");
+        const footerTestBtn = document.getElementById("btn-toggle-test");
+        if (isTestMode) {
+          banner.style.display = "block";
+          if (footerTestBtn) footerTestBtn.textContent = "Ukončit testovací režim (přepnout na ostrou hru)";
+        } else {
+          banner.style.display = "none";
+          if (footerTestBtn) footerTestBtn.textContent = "🧪 Zapnout testovací režim (pro vyzkoušení doma)";
+        }
+      }
+
+      function toggleTestMode(forceValue) {
+        isTestMode = typeof forceValue === "boolean" ? forceValue : !isTestMode;
+        loadState();
+        currentCheckpointId = null;
+        renderAll();
+        showScreen(state.started ? "screen-map" : "screen-welcome");
+      }
+
+      function renderWelcomeScreen() {
+        document.getElementById("welcome-greeting").textContent = `Ahoj, ${NASTAVENI_HRY.jmenoPartnerky || "Lásko"} ❤️`;
+        document.getElementById("welcome-title").textContent = NASTAVENI_HRY.nazevHry || "Cesta našeho příběhu";
+        document.getElementById("welcome-subtitle").textContent = NASTAVENI_HRY.podnadpisHry || "";
+        document.getElementById("welcome-text").textContent = NASTAVENI_HRY.uvodniText || "";
+
+        const startBtn = document.getElementById("btn-start-game");
+        startBtn.textContent =
+          state.started && state.completedIds.length > 0
+            ? "Pokračovat v dobrodružství ✨"
+            : NASTAVENI_HRY.tlacitkoStart || "Vyrazit za dobrodružstvím ✨";
+      }
+
+      function renderCheckpointsList() {
+        const listEl = document.getElementById("checkpoints-list");
+        listEl.innerHTML = "";
+        const cps = getCheckpoints();
+
+        cps.forEach((cp, index) => {
+          const done = isCheckpointCompleted(cp.id);
+          const available = isCheckpointAvailable(index);
+          const unlocked = isCheckpointUnlocked(cp.id);
+
+          const item = document.createElement("div");
+          let statusClass = "status-locked";
+          let iconText = "🔒";
+          let badgeHtml = `<span class="cp-badge badge-locked">Zamčeno</span>`;
+
+          if (done) {
+            statusClass = "status-done";
+            iconText = "✓";
+            badgeHtml = `<span class="cp-badge badge-done">Splněno ✓</span>`;
+          } else if (available) {
+            statusClass = "status-current";
+            iconText = unlocked ? "💖" : `${index + 1}`;
+            badgeHtml = unlocked
+              ? `<span class="cp-badge badge-current">Odemčeno</span>`
+              : `<span class="cp-badge badge-current">Na řadě</span>`;
+          }
+
+          item.className = `checkpoint-item ${statusClass}`;
+          item.innerHTML = `
+            <div class="cp-icon">${iconText}</div>
+            <div class="cp-info">
+              <div class="cp-title">${escapeHtml(cp.nazev)}</div>
+              <div class="cp-desc">${escapeHtml(cp.kratkyPopis || "")}</div>
+            </div>
+            <div>${badgeHtml}</div>
+          `;
+
+          item.addEventListener("click", () => {
+            if (!available && !done) {
+              alert("Tato zastávka je zatím tajemstvím 🔒. Nejprve prosím splň předchozí stanoviště!");
+              return;
+            }
+            openCheckpointDetail(cp.id, false);
+          });
+
+          listEl.appendChild(item);
+        });
+
+        document.getElementById("finale-unlock-box").style.display =
+          areAllCheckpointsCompleted() ? "block" : "none";
+      }
+
+      function showChapterIntro(cp, callback) {
+        const overlay = document.getElementById("chapter-overlay");
+        document.getElementById("overlay-title").textContent = cp.nazev;
+        document.getElementById("overlay-subtitle").textContent = cp.kratkyPopis || "Místo bylo úspěšně odemčeno ✨";
+        overlay.classList.add("visible");
+        document.getElementById("btn-overlay-continue").onclick = () => {
+          overlay.classList.remove("visible");
+          if (callback) callback();
+        };
+      }
+
+      function openCheckpointDetail(cpId, justUnlocked) {
+        const cps = getCheckpoints();
+        const index = cps.findIndex((c) => c.id === cpId);
+        if (index === -1) return;
+        const cp = cps[index];
+        currentCheckpointId = cpId;
+
+        const unlocked = isCheckpointUnlocked(cp.id);
+        const completed = isCheckpointCompleted(cp.id);
+
+        document.getElementById("cp-detail-title").textContent = cp.nazev;
+        document.getElementById("cp-detail-subtitle").textContent = cp.kratkyPopis || `Zastávka ${index + 1} z ${cps.length}`;
+
+        const statusBanner = document.getElementById("cp-status-banner");
+        if (completed) {
+          statusBanner.className = "status-banner completed";
+          statusBanner.innerHTML = `<span>✅</span> <div><strong>Stanoviště je splněno!</strong> Můžeš si kdykoliv znovu prohlédnout tuto vzpomínku.</div>`;
+        } else if (unlocked) {
+          statusBanner.className = "status-banner unlocked";
+          statusBanner.innerHTML = `<span>💖</span> <div><strong>Jsi na místě!</strong> Stanoviště je odemčené. Přečti si vzkaz a splň úkol níže.</div>`;
+        } else {
+          statusBanner.className = "status-banner locked";
+          statusBanner.innerHTML = `<span>🧭</span> <div><strong>Cesta k místu:</strong> Dojdi na určené místo a ověř svou polohu pomocí GPS.</div>`;
+        }
+
+        document.getElementById("cp-kudy-kam").textContent = cp.kudyKam || "";
+
+        const lat = Number(cp.lat);
+        const lng = Number(cp.lng);
+        document.getElementById("link-mapy-cz").href = `https://mapy.cz/zakladni?x=${lng}&y=${lat}&z=17&source=coor&id=${lng}%2C${lat}`;
+        document.getElementById("link-google-maps").href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+        const gpsSection = document.getElementById("cp-gps-section");
+        const unlockedContent = document.getElementById("cp-unlocked-content");
+        const gpsFeedback = document.getElementById("gps-feedback");
+        gpsFeedback.className = "gps-feedback";
+        gpsFeedback.textContent = "";
+
+        document.getElementById("fallback-form").classList.remove("open");
+        document.getElementById("input-backup-code").value = "";
+        document.getElementById("btn-manual-unlock").style.display =
+          NASTAVENI_HRY.povolitRucniOdemceniBezKodu ? "flex" : "none";
+
+        if (!unlocked) {
+          gpsSection.style.display = "block";
+          unlockedContent.style.display = "none";
+        } else {
+          gpsSection.style.display = "none";
+          unlockedContent.style.display = "block";
+          renderUnlockedCheckpointContent(cp, index, cps.length, completed);
+        }
+
+        if (justUnlocked) {
+          showChapterIntro(cp, () => showScreen("screen-checkpoint"));
+        } else {
+          showScreen("screen-checkpoint");
+        }
+      }
+
+      function renderUnlockedCheckpointContent(cp, index, totalCount, completed) {
+        document.getElementById("cp-romantic-text").textContent = cp.romantickyText || "";
+
+        const photoBox = document.getElementById("cp-photo-box");
+        const photoImg = document.getElementById("cp-photo-img");
+        const photoCaption = document.getElementById("cp-photo-caption");
+
+        if (cp.fotka && cp.fotka.trim() !== "") {
+          photoBox.style.display = "block";
+          photoImg.src = cp.fotka.trim();
+          photoImg.onerror = () => { photoBox.style.display = "none"; };
+          if (cp.popisekFotky && cp.popisekFotky.trim() !== "") {
+            photoCaption.style.display = "block";
+            photoCaption.textContent = cp.popisekFotky;
+          } else {
+            photoCaption.style.display = "none";
+          }
+        } else {
+          photoBox.style.display = "none";
+        }
+
+        document.getElementById("cp-task-text").textContent = cp.ukol || "";
+
+        const answerWrap = document.getElementById("cp-answer-wrap");
+        document.getElementById("input-task-answer").value = "";
+        if (!completed && cp.vyzadanaOdpoved && cp.vyzadanaOdpoved.trim() !== "") {
+          answerWrap.style.display = "block";
+          document.getElementById("cp-answer-hint").textContent = cp.napovedaKOdpovedi || "";
+        } else {
+          answerWrap.style.display = "none";
+        }
+
+        const btnCompleteTask = document.getElementById("btn-complete-task");
+        const nextBox = document.getElementById("cp-next-box");
+        const btnGoNext = document.getElementById("btn-go-next-cp");
+
+        if (completed) {
+          btnCompleteTask.style.display = "none";
+          nextBox.style.display = "block";
+          document.getElementById("cp-kam-dal-text").textContent = cp.kamDal || "";
+
+          if (index + 1 < totalCount) {
+            const nextCp = getCheckpoints()[index + 1];
+            btnGoNext.textContent = `Přejít na: ${nextCp.nazev} →`;
+            btnGoNext.onclick = () => openCheckpointDetail(nextCp.id, false);
+          } else {
+            btnGoNext.textContent = "✨ Otevřít závěrečné tajemství ✨";
+            btnGoNext.onclick = () => startFinale();
+          }
+        } else {
+          btnCompleteTask.style.display = "flex";
+          nextBox.style.display = "none";
+        }
+      }
+
+      function verifyGpsLocation() {
+        const cps = getCheckpoints();
+        const cp = cps.find((c) => c.id === currentCheckpointId);
+        if (!cp) return;
+
+        const feedback = document.getElementById("gps-feedback");
+        const btnGps = document.getElementById("btn-verify-gps");
+        feedback.className = "gps-feedback visible";
+
+        if (!("geolocation" in navigator)) {
+          feedback.innerHTML = "⚠️ Tvůj prohlížeč nepodporuje zjišťování polohy. Použij prosím záložní odemknutí níže.";
+          document.getElementById("fallback-form").classList.add("open");
+          return;
+        }
+
+        btnGps.disabled = true;
+        btnGps.textContent = "⏳ Zjišťuji tvoji polohu z GPS...";
+        feedback.textContent = "Čekám na signál GPS z tvého telefonu...";
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            btnGps.disabled = false;
+            btnGps.textContent = "📍 Ověřit moji polohu (GPS)";
+
+            const distance = calculateDistanceMeters(
+              position.coords.latitude,
+              position.coords.longitude,
+              Number(cp.lat),
+              Number(cp.lng)
+            );
+            const accuracy = Math.round(position.coords.accuracy || 0);
+            const tolerance = Number(cp.toleranceMetru) || Number(NASTAVENI_HRY.vychoziToleranceMetru) || 80;
+
+            if (distance <= tolerance) {
+              unlockCurrentCheckpoint();
+            } else {
+              feedback.innerHTML = `📍 <strong>Jsi přibližně ${distance} metrů od cíle</strong> (přesnost GPS ±${accuracy} m).<br>Přibliž se na méně než ${tolerance} metrů a zkus to znovu, nebo použij záložní odemknutí níže.`;
+            }
+          },
+          (error) => {
+            btnGps.disabled = false;
+            btnGps.textContent = "📍 Ověřit moji polohu (GPS)";
+            let msg = "Nepodařilo se zjistit polohu. Povol prosím polohu v prohlížeči, nebo použij záložní odemknutí níže.";
+            feedback.innerHTML = `⚠️ ${msg}`;
+            document.getElementById("fallback-form").classList.add("open");
+          },
+          { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+        );
+      }
+
+      function unlockCurrentCheckpoint() {
+        if (!currentCheckpointId) return;
+        if (!state.unlockedIds.includes(currentCheckpointId)) {
+          state.unlockedIds.push(currentCheckpointId);
+          saveState();
+        }
+        playGentleChime("unlock");
+        openCheckpointDetail(currentCheckpointId, true);
+      }
+
+      function completeCurrentCheckpointTask() {
+        const cps = getCheckpoints();
+        const cp = cps.find((c) => c.id === currentCheckpointId);
+        if (!cp) return;
+
+        if (cp.vyzadanaOdpoved && cp.vyzadanaOdpoved.trim() !== "") {
+          const userAns = document.getElementById("input-task-answer").value.trim().toLowerCase();
+          const expected = cp.vyzadanaOdpoved.trim().toLowerCase();
+          if (userAns !== expected) {
+            alert("Odpověď zatím není úplně přesná. Zkus to prosím ještě jednou ❤️");
+            return;
+          }
+        }
+
+        if (!state.completedIds.includes(cp.id)) {
+          state.completedIds.push(cp.id);
+          saveState();
+        }
+        playGentleChime("celebration");
+        openCheckpointDetail(cp.id, false);
+      }
+
+      function startFinale() {
+        if (!areAllCheckpointsCompleted()) {
+          alert("Nejprve prosím projdi a splň všechna předchozí stanoviště!");
+          return;
+        }
+        if (state.finaleStep === 0) {
+          state.finaleStep = 1;
+          saveState();
+        }
+        renderFinaleScreen();
+        showScreen("screen-finale");
+      }
+
+      function renderMusicWidget(containerEl) {
+        const fin = NASTAVENI_HRY.finale || {};
+        const youtubeId = (fin.youtubeVideoId || "").trim();
+        const mainUrl = fin.hlavniOdkazNaPisen || "https://www.youtube.com/results?search_query=Kabat+Mala+dama+official";
+        const spotifyUrl = fin.spotifyOdkaz || "https://open.spotify.com/search/Kab%C3%A1t%20Mal%C3%A1%20d%C3%A1ma";
+
+        let embedHtml = "";
+        if (youtubeId.length === 11) {
+          embedHtml = `
+            <div class="video-embed-wrapper">
+              <iframe src="https://www.youtube-nocookie.com/embed/${escapeHtml(youtubeId)}?rel=0" 
+                title="Kabát – Malá dáma" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+            </div>
+          `;
+        }
+
+        containerEl.innerHTML = `
+          <div class="music-box">
+            <div class="music-title">🎵 ${escapeHtml(fin.nazevPisen || "Kabát – Malá dáma")}</div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+              ${escapeHtml(fin.popisPisen || "Klepni na tlačítko pro spuštění naší písně:")}
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <a href="${escapeHtml(mainUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-small">
+                ▶️ Spustit píseň: Kabát – Malá dáma
+              </a>
+              <a href="${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-small">
+                🎧 Otevřít ve Spotify
+              </a>
+            </div>
+            ${embedHtml}
+          </div>
+        `;
+      }
+
+      function renderFinaleScreen() {
+        const fin = NASTAVENI_HRY.finale || {};
+        const steps = fin.krokyOdhaleni || [];
+        const stepContainer = document.getElementById("finale-step-container");
+        const mainProposalContainer = document.getElementById("finale-main-proposal");
+
+        if (state.finaleStep <= steps.length && !state.saidYes) {
+          const currentStepObj = steps[state.finaleStep - 1];
+          stepContainer.style.display = "block";
+          mainProposalContainer.style.display = "none";
+
+          document.getElementById("finale-step-indicator").textContent = `Kapitola vyvrcholení • Část ${state.finaleStep} z ${steps.length + 1}`;
+          document.getElementById("finale-step-title").textContent = currentStepObj.nadpis || "";
+          document.getElementById("finale-step-text").textContent = currentStepObj.text || "";
+
+          const stepMusicEl = document.getElementById("finale-step-music");
+          if (currentStepObj.zobrazitHudbuZde) {
+            renderMusicWidget(stepMusicEl);
+          } else {
+            stepMusicEl.innerHTML = "";
+          }
+
+          const nextBtn = document.getElementById("btn-finale-next-step");
+          nextBtn.textContent = currentStepObj.tlacitko || "Pokračovat ❤️";
+          nextBtn.onclick = () => {
+            playGentleChime("unlock");
+            state.finaleStep += 1;
+            saveState();
+            renderFinaleScreen();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        } else {
+          stepContainer.style.display = "none";
+          mainProposalContainer.style.display = "block";
+
+          document.getElementById("proposal-title").textContent = fin.hlavniNadpis || "Mám na tebe už jen jednu otázku...";
+          document.getElementById("proposal-message").textContent = fin.osobniPoselstvi || "";
+          document.getElementById("proposal-question").textContent = fin.velkaOtazka || "Vezmeš si mě?";
+          document.getElementById("proposal-signature").textContent = `S láskou tvůj ${NASTAVENI_HRY.jmenoPartnera || "Luboš"} ❤️`;
+
+          renderMusicWidget(document.getElementById("finale-main-music"));
+
+          const btnYes = document.getElementById("btn-say-yes");
+          const yesCelebrationBox = document.getElementById("yes-celebration-box");
+
+          if (state.saidYes) {
+            btnYes.style.display = "none";
+            yesCelebrationBox.style.display = "block";
+            document.getElementById("yes-message-text").textContent = fin.zpravaPoAno || "Udělala jsi mě nejšťastnějším mužem na světě! ❤️";
+            document.getElementById("yes-time-text").textContent = state.saidYesTime ? `Tento nezapomenutelný okamžik nastal: ${state.saidYesTime}` : "";
+          } else {
+            btnYes.style.display = "flex";
+            btnYes.textContent = fin.tlacitkoAno || "ANO, vezmu! 💍❤️";
+            yesCelebrationBox.style.display = "none";
+          }
+        }
+      }
+
+      function handleSayYes() {
+        state.saidYes = true;
+        state.saidYesTime = new Date().toLocaleString("cs-CZ");
+        saveState();
+        playGentleChime("celebration");
+        burstHeartsEffect();
+        renderFinaleScreen();
+      }
+
+      let particles = [];
+      function initAmbientCanvas() {
+        const canvas = document.getElementById("ambient-canvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        for (let i = 0; i < 24; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 3 + 1.5,
+            speedY: -(Math.random() * 0.35 + 0.12),
+            speedX: (Math.random() - 0.5) * 0.25,
+            alpha: Math.random() * 0.6 + 0.2,
+            isHeart: i % 4 === 0
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach((p) => {
+            p.y += p.speedY;
+            p.x += p.speedX;
+            if (p.y < -20) {
+              p.y = canvas.height + 20;
+              p.x = Math.random() * canvas.width;
+            }
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            if (p.isHeart) {
+              ctx.font = `${Math.round(p.size * 5)}px serif`;
+              ctx.fillStyle = "#e87a96";
+              ctx.fillText("♥", p.x, p.y);
+            } else {
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fillStyle = "#f3c68f";
+              ctx.fill();
+            }
+            ctx.restore();
+          });
+          requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+      }
+
+      function burstHeartsEffect() {
+        const canvas = document.getElementById("ambient-canvas");
+        if (!canvas) return;
+        for (let i = 0; i < 25; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height + Math.random() * 60,
+            size: Math.random() * 4 + 2.5,
+            speedY: -(Math.random() * 1.8 + 0.8),
+            speedX: (Math.random() - 0.5) * 0.8,
+            alpha: 0.9,
+            isHeart: true
+          });
+        }
+      }
+
+      function escapeHtml(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function renderAll() {
+        renderWelcomeScreen();
+        renderCheckpointsList();
+        updateProgressBar();
+        updateTestBanner();
+        const soundBtn = document.getElementById("btn-sound-toggle");
+        if (soundBtn) {
+          soundBtn.textContent = state.soundEnabled ? "🔊 Zvuk zapnut" : "🔇 Zvuk vypnut";
+          soundBtn.classList.toggle("active", state.soundEnabled);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadState();
+        initAmbientCanvas();
+        renderAll();
+
+        if (state.started) {
+          if (state.finaleStep > 0 && areAllCheckpointsCompleted()) {
+            renderFinaleScreen();
+            showScreen("screen-finale");
+          } else {
+            showScreen("screen-map");
+          }
+        } else {
+          showScreen("screen-welcome");
+        }
+
+        document.getElementById("btn-start-game").addEventListener("click", () => {
+          state.started = true;
+          saveState();
+          playGentleChime("unlock");
+          renderCheckpointsList();
+          showScreen("screen-map");
+        });
+
+        document.getElementById("btn-nav-home").addEventListener("click", () => {
+          if (state.started) {
+            renderCheckpointsList();
+            showScreen("screen-map");
+          } else {
+            showScreen("screen-welcome");
+          }
+        });
+
+        document.getElementById("btn-sound-toggle").addEventListener("click", () => {
+          state.soundEnabled = !state.soundEnabled;
+          saveState();
+          renderAll();
+          if (state.soundEnabled) playGentleChime("unlock");
+        });
+
+        document.getElementById("btn-back-to-map").addEventListener("click", () => {
+          renderCheckpointsList();
+          showScreen("screen-map");
+        });
+
+        document.getElementById("btn-verify-gps").addEventListener("click", verifyGpsLocation);
+
+        document.getElementById("btn-toggle-fallback").addEventListener("click", () => {
+          document.getElementById("fallback-form").classList.toggle("open");
+        });
+
+        document.getElementById("btn-submit-code").addEventListener("click", () => {
+          const codeInput = document.getElementById("input-backup-code").value.trim().toUpperCase();
+          const cp = getCheckpoints().find((c) => c.id === currentCheckpointId);
+          if (!cp) return;
+          const cpCode = (cp.zalozniKod || "").trim().toUpperCase();
+          const globalCode = (NASTAVENI_HRY.univerzalniZálozniKod || "LASKA").trim().toUpperCase();
+
+          if (codeInput !== "" && (codeInput === cpCode || codeInput === globalCode)) {
+            unlockCurrentCheckpoint();
+          } else {
+            alert("Zadaný kód nesouhlasí. Zkontroluj ho prosím, nebo použij ruční potvrzení níže.");
+          }
+        });
+
+        document.getElementById("btn-manual-unlock").addEventListener("click", () => {
+          if (confirm("Zlobí v těchto místech signál GPS? Pokud už jsi opravdu na místě, klepni na OK a stanoviště se ti odemkne.")) {
+            unlockCurrentCheckpoint();
+          }
+        });
+
+        document.getElementById("btn-complete-task").addEventListener("click", completeCurrentCheckpointTask);
+        document.getElementById("btn-open-finale").addEventListener("click", startFinale);
+
+        document.getElementById("btn-finale-back").addEventListener("click", () => {
+          renderCheckpointsList();
+          showScreen("screen-map");
+        });
+
+        document.getElementById("btn-say-yes").addEventListener("click", handleSayYes);
+        document.getElementById("btn-toggle-test").addEventListener("click", () => toggleTestMode());
+
+        document.getElementById("test-btn-sim-gps").addEventListener("click", () => {
+          if (currentCheckpointId) {
+            unlockCurrentCheckpoint();
+          } else {
+            const cps = getCheckpoints();
+            const nextCp = cps.find((c) => !isCheckpointCompleted(c.id)) || cps[0];
+            if (nextCp) {
+              currentCheckpointId = nextCp.id;
+              unlockCurrentCheckpoint();
+            }
+          }
+        });
+
+        document.getElementById("test-btn-unlock-all").addEventListener("click", () => {
+          const cps = getCheckpoints();
+          state.started = true;
+          state.unlockedIds = cps.map((c) => c.id);
+          state.completedIds = cps.map((c) => c.id);
+          saveState();
+          renderAll();
+          showScreen("screen-map");
+        });
+
+        document.getElementById("test-btn-reset").addEventListener("click", () => {
+          if (confirm("Opravdu chceš vynulovat TESTOVACÍ režim od začátku?")) {
+            localStorage.removeItem(STORAGE_KEY_TEST);
+            loadState();
+            renderAll();
+            showScreen("screen-welcome");
+          }
+        });
+
+        document.getElementById("test-btn-exit").addEventListener("click", () => toggleTestMode(false));
+
+        document.getElementById("btn-reset-real").addEventListener("click", () => {
+          const modeName = isTestMode ? "TESTOVACÍ" : "SKUTEČNOU (OSTROU)";
+          if (confirm(`Opravdu chceš smazat uložený postup pro ${modeName} hru a vrátit ji úplně na začátek?`)) {
+            localStorage.removeItem(getStorageKey());
+            loadState();
+            renderAll();
+            showScreen("screen-welcome");
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
